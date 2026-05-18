@@ -128,33 +128,6 @@ main ul li strong {
     color: #2c3e50;
 }
 
-/* Categories Page */
-.categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-}
-
-.category-card {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    text-align: center;
-}
-
-.category-card h3 {
-    color: #3498db;
-    margin-bottom: 1rem;
-}
-
-/* Projects Cards */
-.project-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-}
 
 /* ====================== FOOTER ====================== */
 footer {
