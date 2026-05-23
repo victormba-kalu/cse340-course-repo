@@ -91,7 +91,34 @@ img.main-logo {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* Organizations Page */
+/* ====================== PROJECTS PAGE ====================== */
+.projects-list {
+    max-width: 900px;
+    margin: 2rem auto;
+}
+
+.projects-list p {
+    background: white;
+    padding: 1.4rem 1.8rem;
+    margin-bottom: 1.2rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    font-size: 1.08rem;
+    line-height: 1.7;
+    transition: all 0.3s ease;
+}
+
+.projects-list p:hover {
+    transform: translateX(10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.projects-list strong {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+/* Organizations Page - UNCHANGED */
 main ul {
     list-style: none;
     display: grid;
@@ -128,7 +155,6 @@ main ul li strong {
     color: #2c3e50;
 }
 
-
 /* ====================== FOOTER ====================== */
 footer {
     background: #2c3e50;
@@ -150,9 +176,9 @@ footer {
         font-size: 2.1rem;
     }
 
-    main ul li {
-        flex-direction: column;
-        text-align: center;
+    .projects-list p {
+        padding: 1.1rem;
+        font-size: 1.05rem;
     }
 }
 
