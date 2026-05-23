@@ -1,13 +1,16 @@
-<%- include('partials/header') %>
+<%- include('partials/header', { title: title }) %>
 
-    <main>
+<main>
+    <div class="container">
         <h1><%= title %></h1>
         <h2>We offer these categories of service opportunities:</h2>
-        <ul>
-            <li>Environmental</li>
-            <li>Educational</li>
-            <li>Community Service</li>
-            <li>Health and Wellness</li>
+        
+        <ul class="categories-list">
+            <% categories.forEach(category => { %>
+                <li><%= category.name %></li>
+            <% }); %>
         </ul>
-    </main>
+    </div>
+</main>
+
 <%- include('partials/footer') %>

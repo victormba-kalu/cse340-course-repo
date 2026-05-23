@@ -89,3 +89,45 @@ VALUES
      'Organize health screenings, fitness activities, and wellness workshops.', 
      'Central Community Hall', '2026-07-18');
 
+-- =============================================
+-- CATEGORIES TABLE
+-- =============================================
+CREATE TABLE category (
+    category_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE
+);
+
+-- =============================================
+-- JUNCTION TABLE (Many-to-Many)
+-- =============================================
+CREATE TABLE project_category (
+    project_id INTEGER REFERENCES service_project(project_id) ON DELETE CASCADE,
+    category_id INTEGER REFERENCES category(category_id) ON DELETE CASCADE,
+    PRIMARY KEY (project_id, category_id)   -- Composite primary key
+);
+
+-- =============================================
+-- INSERT THE 4 CATEGORIES
+-- =============================================
+INSERT INTO category (name) VALUES
+('Environmental'),
+('Educational'),
+('Community Service'),
+('Health and Wellness');
+
+-- =============================================
+-- ASSOCIATE PROJECTS WITH CATEGORIES
+-- (5 projects per organization = 15 total)
+-- =============================================
+
+-- BrightFuture Builders Projects (organization_id = 1)
+INSERT INTO project_category (project_id, category_id) VALUES
+(1, 1), (2, 4), (3, 1), (4, 3), (5, 1);     -- Mix of categories
+
+-- GreenHarvest Growers Projects (organization_id = 2)
+INSERT INTO project_category (project_id, category_id) VALUES
+(6, 1), (7, 1), (8, 2), (9, 1), (10, 2);
+
+-- UnityServe Volunteers Projects (organization_id = 3)
+INSERT INTO project_category (project_id, category_id) VALUES
+(11, 4), (12, 3), (13, 3), (14, 2), (15, 4);
