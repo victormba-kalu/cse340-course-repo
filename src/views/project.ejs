@@ -1,0 +1,36 @@
+<%- include('partials/header', { title: title }) %>
+
+<main>
+    <div class="container">
+        <a href="/projects" class="back-link">&larr; Back to Upcoming Projects</a>
+        
+        <h1><%= project.title %></h1>
+        
+        <div class="project-meta">
+            <p><strong>Date:</strong> <%= new Date(project.date).toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            }) %></p>
+            <p><strong>Location:</strong> <%= project.location %></p>
+        </div>
+
+        <div class="project-description">
+            <h2>Description</h2>
+            <p><%= project.description %></p>
+        </div>
+
+        <div class="organization-info">
+            <h2>Partner Organization</h2>
+            <p>
+                This project is sponsored by: 
+                <a href="/organization/<%= project.organization_id %>">
+                    <strong><%= project.organization_name %></strong>
+                </a>
+            </p>
+        </div>
+    </div>
+</main>
+
+<%- include('partials/footer') %>
