@@ -109,10 +109,34 @@ const getProjectsByOrganizationId = async (organizationId) => {
   }
 };
 
+/**
+ * Get all categories for a specific service project (Many-to-Many)
+ */
+const getCategoriesByProjectId = async (projectId) => {
+  const query = `
+        SELECT 
+            c.category_id,
+            c.name
+        FROM category c
+        JOIN project_category pc ON c.category_id = pc.category_id
+        WHERE pc.project_id = $1
+        ORDER BY c.name ASC;
+    `;
+
+  try {
+    const result = await db.query(query, [projectId]);
+    return result.rows;
+  } catch (error) {
+    console.error("Error fetching categories by project:", error);
+    throw new Error("Failed to retrieve categories for project");
+  }
+};
+
 // Export all model functions
 export {
   getAllProjects,
   getUpcomingProjects,
   getProjectDetails,
   getProjectsByOrganizationId,
+  getCategoriesByProjectId,
 };

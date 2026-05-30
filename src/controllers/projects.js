@@ -1,5 +1,9 @@
 // Import any needed model functions
-import { getUpcomingProjects, getProjectDetails } from "../models/projects.js";
+import {
+  getUpcomingProjects,
+  getProjectDetails,
+  getCategoriesByProjectId,
+} from "../models/projects.js";
 
 // Constant for how many upcoming projects to show
 const NUMBER_OF_UPCOMING_PROJECTS = 5;
@@ -10,7 +14,7 @@ const showProjectsPage = async (req, res) => {
     const projects = await getUpcomingProjects(NUMBER_OF_UPCOMING_PROJECTS);
 
     res.render("projects", {
-      title: "Upcoming Service Projects", // Updated title as requested
+      title: "Upcoming Service Projects",
       projects,
     });
   } catch (error) {
@@ -21,17 +25,19 @@ const showProjectsPage = async (req, res) => {
 
 const showProjectDetailsPage = async (req, res) => {
   try {
-    const projectId = req.params.id; // Get ID from URL
+    const projectId = req.params.id;
+
     const project = await getProjectDetails(projectId);
+    const categories = await getCategoriesByProjectId(projectId); // ← New
 
     if (!project) {
       return res.status(404).send("Project not found");
     }
 
     res.render("project", {
-      // Renders project.ejs
       title: project.title,
       project,
+      categories, // ← Passed to the view
     });
   } catch (error) {
     console.error("Error fetching project details:", error);
