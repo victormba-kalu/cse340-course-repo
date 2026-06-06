@@ -1,9 +1,11 @@
+
 // src/models/projects.js
 import db from "./db.js";
 
 /**
  * Get all service projects with their sponsoring organization
  */
+
 const getAllProjects = async () => {
   const query = `
         SELECT 
@@ -27,9 +29,6 @@ const getAllProjects = async () => {
   }
 };
 
-/**
- * Get the next N upcoming service projects
- */
 const getUpcomingProjects = async (number_of_projects = 5) => {
   const query = `
         SELECT 
@@ -56,9 +55,6 @@ const getUpcomingProjects = async (number_of_projects = 5) => {
   }
 };
 
-/**
- * Get details for a single service project by ID
- */
 const getProjectDetails = async (projectId) => {
   const query = `
         SELECT 
@@ -83,9 +79,6 @@ const getProjectDetails = async (projectId) => {
   }
 };
 
-/**
- * Get all projects for a specific organization
- */
 const getProjectsByOrganizationId = async (organizationId) => {
   const query = `
         SELECT
@@ -109,9 +102,6 @@ const getProjectsByOrganizationId = async (organizationId) => {
   }
 };
 
-/**
- * Get all categories for a specific service project (Many-to-Many)
- */
 const getCategoriesByProjectId = async (projectId) => {
   const query = `
         SELECT 
@@ -132,23 +122,9 @@ const getCategoriesByProjectId = async (projectId) => {
   }
 };
 
-// Export all model functions
-export {
-  getAllProjects,
-  getUpcomingProjects,
-  getProjectDetails,
-  getProjectsByOrganizationId,
-  getCategoriesByProjectId,
-  createProject
-};
+/* ==================== CREATE FUNCTION  ==================== */
 
-const createProject = async (
-  title,
-  description,
-  location,
-  date,
-  organizationId,
-) => {
+const createProject = async (title, description, location, date, organizationId) => {
   const query = `
       INSERT INTO service_project (title, description, location, date, organization_id)
       VALUES ($1, $2, $3, $4, $5)
@@ -167,4 +143,49 @@ const createProject = async (
   }
 
   return result.rows[0].project_id;
+};
+
+/* ==================== NEW UPDATE FUNCTION ==================== */
+
+const updateProject = async (projectId, title, description, location, date, organizationId) => {
+  const query = `
+        UPDATE service_project 
+        SET title = $1,
+            description = $2,
+            location = $3,
+            date = $4,
+            organization_id = $5
+        WHERE project_id = $6
+        RETURNING project_id;
+    `;
+
+  const queryParams = [title, description, location, date, organizationId, projectId];
+
+  try {
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+      throw new Error("Project not found or could not be updated");
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === "true") {
+      console.log("Updated project with ID:", projectId);
+    }
+
+    return result.rows[0].project_id;
+  } catch (error) {
+    console.error("Error updating project:", error);
+    throw new Error("Failed to update project");
+  }
+};
+
+// Export all model functions
+export { 
+  getAllProjects, 
+  getUpcomingProjects, 
+  getProjectDetails, 
+  getProjectsByOrganizationId,
+  getCategoriesByProjectId,
+  createProject,
+  updateProject     
 };
