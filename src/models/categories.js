@@ -43,7 +43,6 @@ const getCategoryById = async (categoryId) => {
   }
 };
 
-
 const assignCategoryToProject = async (categoryId, projectId) => {
   const query = `
         INSERT INTO project_category (category_id, project_id)
@@ -118,11 +117,72 @@ const getProjectsByCategoryId = async (categoryId) => {
   }
 };
 
+/* ==================== NEW FUNCTIONS FOR THIS ASSIGNMENT ==================== */
+
+/**
+ * Create a new category
+ */
+const createCategory = async (name) => {
+  const query = `
+        INSERT INTO category (name)
+        VALUES ($1)
+        RETURNING category_id;
+    `;
+
+  try {
+    const result = await db.query(query, [name]);
+
+    if (result.rows.length === 0) {
+      throw new Error("Failed to create category");
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === "true") {
+      console.log("Created new category with ID:", result.rows[0].category_id);
+    }
+
+    return result.rows[0].category_id;
+  } catch (error) {
+    console.error("Error creating category:", error);
+    throw new Error("Failed to create category");
+  }
+};
+
+/**
+ * Update an existing category
+ */
+const updateCategory = async (categoryId, name) => {
+  const query = `
+        UPDATE category 
+        SET name = $1
+        WHERE category_id = $2
+        RETURNING category_id;
+    `;
+
+  try {
+    const result = await db.query(query, [name, categoryId]);
+
+    if (result.rows.length === 0) {
+      throw new Error("Category not found or could not be updated");
+    }
+
+    if (process.env.ENABLE_SQL_LOGGING === "true") {
+      console.log("Updated category with ID:", categoryId);
+    }
+
+    return result.rows[0].category_id;
+  } catch (error) {
+    console.error("Error updating category:", error);
+    throw new Error("Failed to update category");
+  }
+};
+
 // Export all model functions
 export {
   getAllCategories,
   getCategoryById,
   getCategoriesByProjectId,
   getProjectsByCategoryId,
-  updateCategoryAssignments
+  updateCategoryAssignments,
+  createCategory, // ← New
+  updateCategory, // ← New
 };

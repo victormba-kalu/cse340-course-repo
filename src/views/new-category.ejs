@@ -1,0 +1,27 @@
+<%- include('partials/header', { title: title }) %>
+
+<main>
+    <div class="container">
+        <a href="/categories" class="back-link">&larr; Back to Categories</a>
+        
+        <h1>Add New Category</h1>
+
+        <form action="/new-category" method="POST" class="form">
+            <div class="form-group">
+                <label for="name">Category Name</label>
+                <input type="text" 
+                       id="name" 
+                       name="name" 
+                       maxlength="100" 
+                       required>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Create Category</button>
+                <a href="/categories" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<%- include('partials/footer') %>

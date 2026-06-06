@@ -8,8 +8,12 @@
         <ul class="categories-list">
             <% categories.forEach(category => { %>
                 <li>
-                    <a href="/category/<%= category.category_id %>">
+                    <a href="/category/<%= category.category_id %>" class="category-name">
                         <%= category.name %>
+                    </a>
+                    
+                    <a href="/edit-category/<%= category.category_id %>" class="edit-link">
+                        Edit
                     </a>
                 </li>
             <% }); %>

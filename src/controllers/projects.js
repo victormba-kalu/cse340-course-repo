@@ -10,7 +10,7 @@ import {
   updateProject, // ← New
 } from "../models/projects.js";
 
-// Validation rules (already good)
+// Validation rules 
 const projectValidation = [
   body("title")
     .trim()

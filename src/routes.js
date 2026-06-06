@@ -17,7 +17,12 @@ import {
   showCategoryDetailsPage,
   showAssignCategoriesForm,
   processAssignCategoriesForm,
+  showNewCategoryForm, // ← New
+  processNewCategoryForm, // ← New
+  showEditCategoryForm, // ← New
+  processEditCategoryForm, // ← New
 } from "./controllers/categories.js"; // ← Updated import
+
 import { testErrorPage } from "./controllers/errors.js";
 import { showNewOrganizationForm } from "./controllers/organizations.js";
 import {
@@ -72,6 +77,20 @@ router.get("/edit-project/:id", showEditProjectForm);
 
 // Route to handle the edit project form submission
 router.post("/edit-project/:id", projectValidation, processEditProjectForm);
+
+// ==================== NEW CATEGORY ROUTES ====================
+
+// Route to display the new category form
+router.get("/new-category", showNewCategoryForm);
+
+// Route to handle new category form submission
+router.post("/new-category", processNewCategoryForm);
+
+// Route to display the edit category form
+router.get("/edit-category/:id", showEditCategoryForm);
+
+// Route to handle the edit category form submission
+router.post("/edit-category/:id", processEditCategoryForm);
 
 // Route for new project page
 router.get("/new-project", showNewProjectForm);
