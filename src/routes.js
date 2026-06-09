@@ -1,4 +1,5 @@
 import express from "express";
+import { showUserRegistrationForm, processUserRegistrationForm } from "./controllers/users.js";
 import { showOrganizationDetailsPage } from "./controllers/organizations.js";
 import { showHomePage } from "./controllers/index.js";
 import { showOrganizationsPage } from "./controllers/organizations.js";
@@ -98,6 +99,9 @@ router.get("/new-project", showNewProjectForm);
 // Route to handle new project form submission
 router.post("/new-project", processNewProjectForm);
 
+// User registration routes
+router.get('/register', showUserRegistrationForm);
+router.post('/register', processUserRegistrationForm);
 // error-handling routes
 router.get("/test-error", testErrorPage);
 
