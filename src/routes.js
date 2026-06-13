@@ -8,6 +8,7 @@ import {
   requireLogin,
   showDashboard,
   requireRole,
+  showUsersPage, 
 } from "./controllers/users.js";
 import { showOrganizationDetailsPage } from "./controllers/organizations.js";
 import { showHomePage } from "./controllers/index.js";
@@ -27,9 +28,9 @@ import {
   showCategoryDetailsPage,
   showAssignCategoriesForm,
   processAssignCategoriesForm,
-  showNewCategoryForm, // ← New
-  processNewCategoryForm, // ← New
-  showEditCategoryForm, // ← New
+  showNewCategoryForm, 
+  processNewCategoryForm, 
+  showEditCategoryForm, 
   processEditCategoryForm, // ← New
 } from "./controllers/categories.js"; // ← Updated import
 
@@ -101,6 +102,9 @@ router.get("/logout", processLogout);
 
 // Protected dashboard route
 router.get("/dashboard", requireLogin, showDashboard);
+
+// Users page - Admin only
+router.get("/users", requireRole("admin"), showUsersPage); // ← Added
 
 // ==================== NEW EDIT PROJECT ROUTES ====================
 

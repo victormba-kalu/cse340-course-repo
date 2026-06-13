@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { createUser, authenticateUser } from "../models/users.js";
+import { createUser, authenticateUser, getAllUsers } from "../models/users.js";
 
 const showUserRegistrationForm = (req, res) => {
   res.render("register", { title: "Register" });
@@ -79,11 +79,10 @@ const requireLogin = (req, res, next) => {
 /**
  * Middleware factory to require specific role for route access
  * Returns middleware that checks if user has the required role
- * 
+ *
  * @param {string} role - The role name required (e.g., 'admin', 'user')
  * @returns {Function} Express middleware function
  */
-
 const requireRole = (role) => {
   return (req, res, next) => {
     // Check if user is logged in first
@@ -112,6 +111,24 @@ const showDashboard = (req, res) => {
   });
 };
 
+/**
+ * Display all registered users (Admin only)
+ */
+const showUsersPage = async (req, res) => {
+  try {
+    const users = await getAllUsers();
+    const title = "All Registered Users";
+
+    res.render("users", {
+      title,
+      users,
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).send("Server Error");
+  }
+};
+
 export {
   showUserRegistrationForm,
   processUserRegistrationForm,
@@ -120,5 +137,6 @@ export {
   processLogout,
   requireLogin,
   showDashboard,
-  requireRole, 
+  requireRole,
+  showUsersPage, 
 };
