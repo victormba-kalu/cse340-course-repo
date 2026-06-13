@@ -6,7 +6,11 @@
         
         <div class="project-header">
             <h1><%= project.title %></h1>
-            <a href="/edit-project/<%= project.project_id %>" class="btn btn-primary">✏️ Edit Project</a>
+            
+            
+            <% if (user && user.role_name === 'admin') { %>
+                <a href="/edit-project/<%= project.project_id %>" class="btn btn-primary">✏️ Edit Project</a>
+            <% } %>
         </div>
         
         <div class="project-meta">

@@ -1,4 +1,5 @@
 import db from "./db.js";
+import bcrypt from "bcrypt";
 
 const createUser = async (name, email, passwordHash) => {
   const default_role = "user";
@@ -22,4 +23,55 @@ const createUser = async (name, email, passwordHash) => {
   return result.rows[0].user_id;
 };
 
-export { createUser };
+const findUserByEmail = async (email) => {
+  const query = `
+        SELECT 
+            u.user_id, 
+            u.name, 
+            u.email, 
+            u.password_hash, 
+            r.role_name
+        FROM users u
+        JOIN roles r ON u.role_id = r.role_id
+        WHERE u.email = $1
+    `;
+
+  const queryParams = [email];
+
+  try {
+    const result = await db.query(query, queryParams);
+
+    if (result.rows.length === 0) {
+      return null; // User not found
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error fetching user by email:", error);
+    throw new Error("Failed to retrieve user");
+  }
+};
+
+const verifyPassword = async (password, passwordHash) => {
+  return bcrypt.compare(password, passwordHash);
+};
+
+const authenticateUser = async (email, password) => {
+  const user = await findUserByEmail(email);
+
+  if (!user) {
+    return null;
+  }
+
+  const isPasswordValid = await verifyPassword(password, user.password_hash);
+
+  if (isPasswordValid) {
+    // Remove password_hash before returning user data
+    const { password_hash, ...userWithoutPassword } = user;
+    return userWithoutPassword;
+  }
+
+  return null;
+};
+
+export { createUser, authenticateUser };
