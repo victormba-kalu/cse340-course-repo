@@ -7,7 +7,6 @@
         <div class="project-header">
             <h1><%= project.title %></h1>
             
-            
             <% if (user && user.role_name === 'admin') { %>
                 <a href="/edit-project/<%= project.project_id %>" class="btn btn-primary">✏️ Edit Project</a>
             <% } %>
@@ -27,6 +26,24 @@
             <h2>Description</h2>
             <p><%= project.description %></p>
         </div>
+
+        <!-- Volunteer Section -->
+        <% if (isLoggedIn) { %>
+        <div class="volunteer-section">
+            <h2>Volunteer for this Project</h2>
+            
+            <% if (isVolunteering) { %>
+                <p class="volunteering-status">✅ You are currently volunteering for this project.</p>
+                <form action="/project/<%= project.project_id %>/remove-volunteer" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Remove Me as Volunteer</button>
+                </form>
+            <% } else { %>
+                <form action="/project/<%= project.project_id %>/volunteer" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-success">Volunteer for this Project</button>
+                </form>
+            <% } %>
+        </div>
+        <% } %>
 
         <!-- Category Tags -->
         <% if (categories && categories.length > 0) { %>

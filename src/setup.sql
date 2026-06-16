@@ -175,3 +175,18 @@ SELECT users.email, roles.role_name
 FROM users 
 JOIN roles ON users.role_id = roles.role_id 
 WHERE users.email = 'admin@example.com';
+
+-- =============================================
+-- VOLUNTEER TRACKING TABLE (Many-to-Many)
+-- Users can volunteer for multiple projects
+-- Projects can have multiple volunteers
+-- =============================================
+CREATE TABLE user_project_volunteer (
+    user_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+    project_id INTEGER REFERENCES service_project(project_id) ON DELETE CASCADE,
+    volunteered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, project_id)   -- Composite primary key
+);
+
+-- Quick overview of the table
+SELECT * FROM user_project_volunteer LIMIT 10;

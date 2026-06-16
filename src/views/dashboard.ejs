@@ -13,6 +13,25 @@
                 <a href="/users" class="admin-link">👥 View All Registered Users</a>
             </p>
         <% } %>
+
+        <!-- Volunteered Projects Section -->
+        <% if (volunteeredProjects && volunteeredProjects.length > 0) { %>
+            <h2>My Volunteered Projects</h2>
+            <div class="volunteered-projects">
+                <% volunteeredProjects.forEach(project => { %>
+                    <div class="project-item">
+                        <strong><%= project.title %></strong> 
+                        <span class="date">(<%= new Date(project.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %>)</span>
+                        
+                        <form action="/project/<%= project.project_id %>/remove-volunteer" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-small">Remove</button>
+                        </form>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p>You haven't volunteered for any projects yet.</p>
+        <% } %>
     </div>
 </main>
 

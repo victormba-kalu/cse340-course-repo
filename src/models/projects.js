@@ -1,4 +1,3 @@
-
 // src/models/projects.js
 import db from "./db.js";
 
@@ -124,7 +123,13 @@ const getCategoriesByProjectId = async (projectId) => {
 
 /* ==================== CREATE FUNCTION  ==================== */
 
-const createProject = async (title, description, location, date, organizationId) => {
+const createProject = async (
+  title,
+  description,
+  location,
+  date,
+  organizationId,
+) => {
   const query = `
       INSERT INTO service_project (title, description, location, date, organization_id)
       VALUES ($1, $2, $3, $4, $5)
@@ -147,7 +152,14 @@ const createProject = async (title, description, location, date, organizationId)
 
 /* ==================== NEW UPDATE FUNCTION ==================== */
 
-const updateProject = async (projectId, title, description, location, date, organizationId) => {
+const updateProject = async (
+  projectId,
+  title,
+  description,
+  location,
+  date,
+  organizationId,
+) => {
   const query = `
         UPDATE service_project 
         SET title = $1,
@@ -159,7 +171,14 @@ const updateProject = async (projectId, title, description, location, date, orga
         RETURNING project_id;
     `;
 
-  const queryParams = [title, description, location, date, organizationId, projectId];
+  const queryParams = [
+    title,
+    description,
+    location,
+    date,
+    organizationId,
+    projectId,
+  ];
 
   try {
     const result = await db.query(query, queryParams);
@@ -179,13 +198,85 @@ const updateProject = async (projectId, title, description, location, date, orga
   }
 };
 
+/* =========== Volunteer Functions=================== */
+
+/**
+ * Adding a user as a volunteer for a project
+ */
+const addVolunteer = async (userId, projectId) => {
+  const query = `
+        INSERT INTO user_project_volunteer (user_id, project_id)
+        VALUES ($1, $2)
+        ON CONFLICT (user_id, project_id) DO NOTHING
+        RETURNING user_id;
+    `;
+
+  try {
+    const result = await db.query(query, [userId, projectId]);
+    return result.rows.length > 0;
+  } catch (error) {
+    console.error("Error adding volunteer:", error);
+    throw new Error("Failed to add volunteer");
+  }
+};
+
+/**
+ * Removing a user as a volunteer from a project
+ */
+const removeVolunteer = async (userId, projectId) => {
+  const query = `
+        DELETE FROM user_project_volunteer 
+        WHERE user_id = $1 AND project_id = $2
+        RETURNING user_id;
+    `;
+
+  try {
+    const result = await db.query(query, [userId, projectId]);
+    return result.rows.length > 0;
+  } catch (error) {
+    console.error("Error removing volunteer:", error);
+    throw new Error("Failed to remove volunteer");
+  }
+};
+
+/**
+ * Get all projects a user has volunteered for
+ */
+const getUserVolunteeredProjects = async (userId) => {
+  const query = `
+        SELECT 
+            p.project_id,
+            p.title,
+            p.description,
+            p.date,
+            p.location,
+            o.name AS organization_name
+        FROM user_project_volunteer uv
+        JOIN service_project p ON uv.project_id = p.project_id
+        JOIN organization o ON p.organization_id = o.organization_id
+        WHERE uv.user_id = $1
+        ORDER BY p.date ASC;
+    `;
+
+  try {
+    const result = await db.query(query, [userId]);
+    return result.rows;
+  } catch (error) {
+    console.error("Error fetching volunteered projects:", error);
+    throw new Error("Failed to retrieve volunteered projects");
+  }
+};
+
 // Export all model functions
-export { 
-  getAllProjects, 
-  getUpcomingProjects, 
-  getProjectDetails, 
+export {
+  getAllProjects,
+  getUpcomingProjects,
+  getProjectDetails,
   getProjectsByOrganizationId,
   getCategoriesByProjectId,
   createProject,
-  updateProject     
+  updateProject,
+  addVolunteer,
+  removeVolunteer,
+  getUserVolunteeredProjects,
 };

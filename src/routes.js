@@ -8,7 +8,7 @@ import {
   requireLogin,
   showDashboard,
   requireRole,
-  showUsersPage, 
+  showUsersPage,
 } from "./controllers/users.js";
 import { showOrganizationDetailsPage } from "./controllers/organizations.js";
 import { showHomePage } from "./controllers/index.js";
@@ -21,6 +21,8 @@ import {
   projectValidation,
   showEditProjectForm,
   processEditProjectForm,
+  volunteerForProject, // ← New
+  removeVolunteerFromProject, // ← New
 } from "./controllers/projects.js";
 
 import {
@@ -28,11 +30,11 @@ import {
   showCategoryDetailsPage,
   showAssignCategoriesForm,
   processAssignCategoriesForm,
-  showNewCategoryForm, 
-  processNewCategoryForm, 
-  showEditCategoryForm, 
-  processEditCategoryForm, // ← New
-} from "./controllers/categories.js"; // ← Updated import
+  showNewCategoryForm,
+  processNewCategoryForm,
+  showEditCategoryForm,
+  processEditCategoryForm,
+} from "./controllers/categories.js";
 
 import { testErrorPage } from "./controllers/errors.js";
 import { showNewOrganizationForm } from "./controllers/organizations.js";
@@ -55,9 +57,22 @@ router.get("/organization/:id", showOrganizationDetailsPage);
 router.get("/new-organization", requireRole("admin"), showNewOrganizationForm);
 
 // New route for category details page
-router.get("/category/:id", showCategoryDetailsPage); // ← Added
+router.get("/category/:id", showCategoryDetailsPage);
 
+// Project details
 router.get("/project/:id", showProjectDetailsPage);
+
+// ============ Volunteer ROUTES =============================
+
+// Volunteer for a project (Logged in users only)
+router.post("/project/:id/volunteer", requireLogin, volunteerForProject);
+
+// Remove yourself as volunteer
+router.post(
+  "/project/:id/remove-volunteer",
+  requireLogin,
+  removeVolunteerFromProject,
+);
 
 // Route to display the edit organization form
 router.get(
@@ -104,7 +119,7 @@ router.get("/logout", processLogout);
 router.get("/dashboard", requireLogin, showDashboard);
 
 // Users page - Admin only
-router.get("/users", requireRole("admin"), showUsersPage); // ← Added
+router.get("/users", requireRole("admin"), showUsersPage);
 
 // ==================== NEW EDIT PROJECT ROUTES ====================
 
