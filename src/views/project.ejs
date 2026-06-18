@@ -66,6 +66,14 @@
                 </a>
             </p>
         </div>
+        <!-- Assign Categories - Admin Only -->
+        <% if (user && user.role_name === 'admin') { %>
+        <div class="assign-categories">
+            <a href="/assign-categories/<%= project.project_id %>" class="btn btn-primary">
+                Assign Categories to this Project
+            </a>
+        </div>
+        <% } %>
     </div>
 </main>
 
